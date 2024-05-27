@@ -1,0 +1,21 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Function to calculate total head movements using FCFS algorithm
+int fcfs(int requests[], int size, int initialPosition) {
+    int totalHeadMovements = abs(requests[0] - initialPosition);
+    for (int i = 1; i < size; i++) {
+        totalHeadMovements += abs(requests[i] - requests[i - 1]);
+    }
+    return totalHeadMovements;
+}
+
+int main() {
+    int requests[] = {98, 183, 37, 122, 14, 124, 65, 67};
+    int size = sizeof(requests) / sizeof(requests[0]);
+    int initialPosition = 53;
+
+    printf("Total head movements using FCFS: %d\n", fcfs(requests, size, initialPosition));
+
+    return 0;
+}
