@@ -1,0 +1,103 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Function to sort an array in ascending order
+void sort(int arr[], int size) {
+    for (int i = 0; i < size - 1; i++) {
+        for (int j = 0; j < size - i - 1; j++) {
+            if (arr[j] > arr[j + 1]) {
+                int temp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+            }
+        }
+    }
+}
+
+// Function to calculate total head movements using SCAN algorithm
+int scan(int requests[], int size, int initialPosition, int upperBound) {
+    int totalHeadMovements = 0;
+    int direction = 1; // 1 for moving towards higher cylinder numbers, -1 for moving towards lower cylinder numbers
+    int currentPosition = initialPosition;
+
+    sort(requests, size);
+
+    for (int i = 0; i < size; i++) {
+        if (direction == 1) {
+            // Move towards higher cylinder numbers
+            for (int j = 0; j < size; j++) {
+                if (requests[j] >= currentPosition) {
+                    totalHeadMovements += abs(requests[j] - currentPosition);
+                    currentPosition = requests[j];
+                    break;
+                }
+            }
+            if (currentPosition == upperBound) {
+                direction = -1;
+                totalHeadMovements += abs(upperBound - 0);
+                currentPosition = 0;
+            }
+        } else {
+            // Move towards lower cylinder numbers
+            for (int j = size - 1; j >= 0; j--) {
+                if (requests[j] <= currentPosition) {
+                    totalHeadMovements += abs(requests[j] - currentPosition);
+                    currentPosition = requests[j];
+                    break;
+                }
+            }
+            if (currentPosition == 0) {
+                direction = 1;
+                totalHeadMovements += abs(upperBound - 0);
+                currentPosition = upperBound;
+            }
+        }
+    }
+
+    return totalHeadMovements;
+}
+
+// Function to calculate total head movements using C-SCAN algorithm
+int cscan(int requests[], int size, int initialPosition, int upperBound) {
+    int totalHeadMovements = 0;
+    int currentPosition = initialPosition;
+
+    sort(requests, size);
+
+    // Move towards higher cylinder numbers
+    int i;
+    for (i = 0; i < size; i++) {
+        if (requests[i] >= currentPosition) {
+            totalHeadMovements += abs(requests[i] - currentPosition);
+            currentPosition = requests[i];
+            break;
+        }
+    }
+    if (currentPosition != upperBound) {
+        totalHeadMovements += abs(upperBound - currentPosition);
+        currentPosition = 0;
+    }
+
+    // Move back to the lower bound
+    totalHeadMovements += upperBound;
+
+    // Move towards higher cylinder numbers again
+    for (i = 0; i < size; i++) {
+        totalHeadMovements += abs(requests[i] - currentPosition);
+        currentPosition = requests[i];
+    }
+
+    return totalHeadMovements;
+}
+
+int main() {
+    int requests[] = {98, 183, 37, 122, 14, 124, 65, 67};
+    int size = sizeof(requests) / sizeof(requests[0]);
+    int initialPosition = 53;
+    int upperBound = 199; // The upper bound of the cylinder
+
+    printf("Total head movements using SCAN: %d\n", scan(requests, size, initialPosition, upperBound));
+    printf("Total head movements using C-SCAN: %d\n", cscan(requests, size, initialPosition, upperBound));
+
+    return 0;
+}
