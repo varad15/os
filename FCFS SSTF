@@ -1,0 +1,51 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <limits.h>
+
+// Function to calculate total head movements using FCFS algorithm
+int fcfs(int requests[], int size, int initialPosition) {
+    int totalHeadMovements = abs(requests[0] - initialPosition);
+    for (int i = 1; i < size; i++) {
+        totalHeadMovements += abs(requests[i] - requests[i - 1]);
+    }
+    return totalHeadMovements;
+}
+
+// Function to calculate total head movements using SSTF algorithm
+int sstf(int requests[], int size, int initialPosition) {
+    int totalHeadMovements = 0;
+    int visited[size];
+    for (int i = 0; i < size; i++) {
+        visited[i] = 0;
+    }
+
+    int currentPosition = initialPosition;
+    for (int i = 0; i < size; i++) {
+        int minDistance = INT_MAX;
+        int minIndex = -1;
+        for (int j = 0; j < size; j++) {
+            if (!visited[j]) {
+                int distance = abs(currentPosition - requests[j]);
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    minIndex = j;
+                }
+            }
+        }
+        visited[minIndex] = 1;
+        totalHeadMovements += minDistance;
+        currentPosition = requests[minIndex];
+    }
+    return totalHeadMovements;
+}
+
+int main() {
+    int requests[] = {98, 183, 37, 122, 14, 124, 65, 67};
+    int size = sizeof(requests) / sizeof(requests[0]);
+    int initialPosition = 53;
+
+    printf("Total head movements using FCFS: %d\n", fcfs(requests, size, initialPosition));
+    printf("Total head movements using SSTF: %d\n", sstf(requests, size, initialPosition));
+
+    return 0;
+}
