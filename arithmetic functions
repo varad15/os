@@ -1,0 +1,40 @@
+
+add() {
+    result=$(( $1 + $2 ))
+    echo "Addition: $result"
+}
+
+subtract() {
+    result=$(( $1 - $2 ))
+    echo "Subtraction: $result"
+}
+
+multiply() {
+    result=$(( $1 * $2))
+    echo "Multiplication: $result"
+}
+
+divide() {
+    if [ $2 -eq 0 ]; then
+        echo "Cannot divide by zero"
+    else
+        result=$(awk "BEGIN {printf \"%.2f\", $1 / $2}")
+        echo "Division: $result"
+    fi
+}
+
+remainder() {
+    result=$(( $1 % $2))
+    echo "Remainder: $result"
+}
+
+echo "Arithmetic Function Demo"
+echo "-----------------------"
+
+read -p "Enter two numbers: " num1 num2
+
+add $num1 $num2
+subtract $num1 $num2
+multiply $num1 $num2
+divide $num1 $num2
+remainder $num1 $num2
